@@ -1,12 +1,15 @@
 import { Show } from "@prisma/client";
 import { NextPage } from "next";
 import Head from "next/head";
-import { useEffect, useState } from "react";
+import { useRef } from "react";
 import { TwitchPlayerNonInteractive } from "react-twitch-embed";
 import DefaultInitialPage from "../components/DefaultInitialPage";
 import { trpc } from "../utils/trpc";
-import useSidebar from "../hooks/useSidebar";
 import Sidebar from "../components/Sidebar";
+import useWindowEvents from "../hooks/useWindowEvents";
+import useKeyboardEvents from "../hooks/useKeyboardEvents";
+
+type SidebarnHandle = React.ElementRef<typeof Sidebar>;
 
 function getCurrentChannel(shows: Show[]): Show | undefined {
   if (!shows || !shows.length) return;
@@ -23,31 +26,30 @@ function getCurrentChannel(shows: Show[]): Show | undefined {
 }
 
 const Home: NextPage = () => {
-  const [limits, setLimits] = useState({ width: 0, height: 0 });
   const { data: shows } = trpc.useQuery(["schedule.getAll"]);
+  const sidebarRef = useRef<SidebarnHandle>(null);
 
-  const { isOpen, toggleSidebar, openSidebar } = useSidebar();
+  useKeyboardEvents({
+    toggleSidebar: () => {
+      sidebarRef.current?.toggleSidebar();
+    },
+  });
 
-  useEffect(() => {
-    window &&
-      setLimits({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
-  }, []);
+  const { limits } = useWindowEvents();
+
+  const handleOpenSchedule = () => {
+    sidebarRef.current?.openSidebar();
+  };
 
   const currentChannel = getCurrentChannel(shows || []);
 
-  console.log("rendered");
   return (
     <>
       <Head>
-        <title>
-          {currentChannel && currentChannel.channel + " :: "} Twitch Cable
-        </title>
+        <title>Twitch Cable</title>
       </Head>
       {!shows || !currentChannel ? (
-        <DefaultInitialPage onClickToOpenSchedule={openSidebar} />
+        <DefaultInitialPage onClickToOpenSchedule={handleOpenSchedule} />
       ) : (
         <main
           className="container mx-auto flex flex-col justify-center items-center"
@@ -61,11 +63,7 @@ const Home: NextPage = () => {
           />
         </main>
       )}
-      <Sidebar
-        isOpen={isOpen}
-        toggleSidebar={toggleSidebar}
-        shows={shows || []}
-      />
+      <Sidebar shows={shows || []} ref={sidebarRef} />
     </>
   );
 };
