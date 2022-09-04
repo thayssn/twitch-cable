@@ -2,7 +2,7 @@ import { Show } from "@prisma/client";
 import { NextPage } from "next";
 import Head from "next/head";
 import { useEffect, useState } from "react";
-import { TwitchPlayer, TwitchPlayerNonInteractive } from "react-twitch-embed";
+import { TwitchPlayerNonInteractive } from "react-twitch-embed";
 import DefaultInitialPage from "../components/DefaultInitialPage";
 import { trpc } from "../utils/trpc";
 import useSidebar from "../hooks/useSidebar";

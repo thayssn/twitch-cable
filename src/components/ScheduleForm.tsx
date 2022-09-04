@@ -2,11 +2,10 @@ import { Show } from "@prisma/client";
 import { FormEvent, useRef } from "react";
 import InputGroup from "./InputGroup";
 import { trpc } from "../utils/trpc";
-import Link from "next/link";
 
 const ScheduleForm = () => {
   const context = trpc.useContext();
-  const formRef = useRef<HTMLFormElement>();
+  const formRef = useRef<HTMLFormElement>(null);
 
   const resetForm = () => {
     formRef.current?.reset();

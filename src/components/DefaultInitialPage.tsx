@@ -18,7 +18,7 @@ export default function DefaultInitialPage({
         </h1>
 
         <h2 className="text-3xl text-white mt-6">
-          It looks like you don't have any show scheduled.
+          It looks like you don&apos;t have any show scheduled.
         </h2>
 
         <p
