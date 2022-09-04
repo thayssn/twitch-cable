@@ -42,7 +42,9 @@ const Home: NextPage = () => {
   return (
     <>
       <Head>
-        <title>{currentChannel?.channel} :: Twitch Cable</title>
+        <title>
+          {currentChannel && currentChannel.channel + " :: "} Twitch Cable
+        </title>
       </Head>
       {!shows || !currentChannel ? (
         <DefaultInitialPage onClickToOpenSchedule={openSidebar} />
