@@ -27,10 +27,6 @@ const getBaseUrl = () => {
 
 export default withTRPC<AppRouter>({
   config() {
-    /**
-     * If you want to use SSR, you need to use the server's full URL
-     * @link https://trpc.io/docs/ssr
-     */
     const url = `${getBaseUrl()}/api/trpc`;
 
     return {
@@ -47,6 +43,8 @@ export default withTRPC<AppRouter>({
       queryClientConfig: {
         defaultOptions: {
           queries: {
+            staleTime: 0,
+            refetchInterval: 1000 * 30,
             cacheTime: 1000 * 60 * 60 * 24,
             refetchOnWindowFocus: false,
           },
@@ -54,5 +52,4 @@ export default withTRPC<AppRouter>({
       },
     };
   },
-  ssr: true,
 })(MyApp);
