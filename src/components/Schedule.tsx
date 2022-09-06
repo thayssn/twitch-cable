@@ -11,17 +11,15 @@ export default function Schedule({ shows }: { shows: Show[] }) {
 
   return (
     <div className="my-4">
-      <div className="shadow-md mb-4 p-4 flex text-lg text-gray-300">
+      <div className="shadow-md mb-4 p-4 flex text-sm text-gray-300">
         <h3 className="w-full font-bold">Channel</h3>
         <div className="w-60 text-right font-bold">Start at</div>
-        <div className="w-60 text-right font-bold">End at</div>
         <div className="w-40 ml-8 text-center font-bold">Remove</div>
       </div>
       {shows.map((show) => (
         <div key={show.id} className="border mb-2 p-4 flex text-gray-300">
           <h3 className="w-full">{show.channel}</h3>
           <div className="w-60 text-right">{show.startTime}</div>
-          <div className="w-60 text-right">{show.endTime}</div>
           <div className="w-40 ml-8 text-center">
             <span
               onClick={() => {

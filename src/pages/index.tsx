@@ -1,37 +1,34 @@
-import { Show } from "@prisma/client";
 import { NextPage } from "next";
 import Head from "next/head";
-import { useRef } from "react";
-import { TwitchPlayerNonInteractive } from "react-twitch-embed";
+import { useEffect, useRef } from "react";
+import { TwitchPlayer } from "react-twitch-embed";
 import DefaultInitialPage from "../components/DefaultInitialPage";
 import { trpc } from "../utils/trpc";
 import Sidebar from "../components/Sidebar";
 import useWindowEvents from "../hooks/useWindowEvents";
 import useKeyboardEvents from "../hooks/useKeyboardEvents";
+import { getCurrentChannel } from "../utils/getCurrentChannel";
+import ChatSidebar from "../components/ChatSidebar";
 
 type SidebarnHandle = React.ElementRef<typeof Sidebar>;
-
-function getCurrentChannel(shows: Show[]): Show | undefined {
-  if (!shows || !shows.length) return;
-  return shows.reduce((acc, currentValue) => {
-    const currentDate = new Date();
-    const currentTime = `${currentDate.getHours()}${currentDate
-      .getMinutes()
-      .toString()
-      .padStart(2, "0")}`;
-    const showIsOn: boolean =
-      Number(currentTime) >= Number(currentValue.startTime.replace(":", ""));
-    return showIsOn ? currentValue : acc;
-  }, shows[0]);
-}
+type ChatSidebarnHandle = React.ElementRef<typeof ChatSidebar>;
 
 const Home: NextPage = () => {
   const { data: shows } = trpc.useQuery(["schedule.getAll"]);
   const sidebarRef = useRef<SidebarnHandle>(null);
+  const chatSidebarRef = useRef<ChatSidebarnHandle>(null);
+  const twitchRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    twitchRef.current?.focus();
+  }, []);
 
   useKeyboardEvents({
     toggleSidebar: () => {
       sidebarRef.current?.toggleSidebar();
+    },
+    toggleChatSidebar: () => {
+      chatSidebarRef.current?.toggleSidebar();
     },
   });
 
@@ -52,18 +49,26 @@ const Home: NextPage = () => {
         <DefaultInitialPage onClickToOpenSchedule={handleOpenSchedule} />
       ) : (
         <main
+          ref={twitchRef}
           className="container mx-auto flex flex-col justify-center items-center"
           id="twitch-embed"
         >
-          <TwitchPlayerNonInteractive
+          <TwitchPlayer
             channel={currentChannel.channel}
             width={limits.width}
             height={limits.height}
             muted={false}
+            allowFullscreen={true}
+            autoplay={true}
+            playsInline={true}
           />
         </main>
       )}
       <Sidebar shows={shows || []} ref={sidebarRef} />
+      <ChatSidebar
+        channel={currentChannel?.channel ?? ""}
+        ref={chatSidebarRef}
+      />
     </>
   );
 };

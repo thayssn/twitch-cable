@@ -15,7 +15,6 @@ model Show {
     id String @id @default(cuid())
     channel String
     startTime String
-    endTime String
 }
 
 // Necessary for Next auth

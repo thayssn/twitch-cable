@@ -2,10 +2,12 @@ import { useCallback, useEffect, useRef } from "react";
 
 type KeyboardEventsProps = {
   toggleSidebar: () => void;
+  toggleChatSidebar: () => void;
 };
 
 export default function useKeyboardEvents({
   toggleSidebar,
+  toggleChatSidebar,
 }: KeyboardEventsProps) {
   const storedKey = useRef<string>("");
 
@@ -14,10 +16,15 @@ export default function useKeyboardEvents({
   }, []);
 
   const handleKeyDown = useCallback((event: KeyboardEvent) => {
-    if (!["ArrowLeft", "ControlLeft"].includes(event.code)) return;
+    if (!["ArrowLeft", "ArrowRight", "ControlLeft"].includes(event.code))
+      return;
     if (storedKey.current === "ControlLeft" && event.code === "ArrowLeft") {
       toggleSidebar();
     }
+    if (storedKey.current === "ControlLeft" && event.code === "ArrowRight") {
+      toggleChatSidebar();
+    }
+
     if (event.code === "ControlLeft") storedKey.current = event.code;
   }, []);
 
@@ -30,7 +37,7 @@ export default function useKeyboardEvents({
         window.removeEventListener("keyup", handleKeyUp);
       };
     }
-  }, [handleKeyDown, handleKeyUp]);
+  }, []);
 
   return;
 }

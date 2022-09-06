@@ -24,6 +24,7 @@ const ScheduleForm = () => {
     {
       onSuccess() {
         context.invalidateQueries(["schedule.getAll"]);
+        context.refetchQueries(["schedule.getAll"]);
         resetForm();
       },
     }
@@ -37,7 +38,7 @@ const ScheduleForm = () => {
   };
   return (
     <>
-      <h3 className="text-2xl leading-normal font-extrabold text-gray-700">
+      <h3 className="text-2xl leading-normal font-extrabold text-gray-300">
         Add show
       </h3>
       <form ref={formRef} className="" onSubmit={onSubmit}>
@@ -54,14 +55,6 @@ const ScheduleForm = () => {
           type="time"
           inputProps={{ required: true }}
         />
-        <InputGroup
-          name="endTime"
-          label="End Time"
-          placeholder="12:00"
-          type="time"
-          inputProps={{ required: true }}
-        />
-
         <button
           disabled={isLoadingMutation}
           type="submit"
