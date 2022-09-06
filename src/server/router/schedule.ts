@@ -7,14 +7,12 @@ export const scheduleRouter = createRouter()
     input: z.object({
       channel: z.string().min(1),
       startTime: z.string().min(1),
-      endTime: z.string().min(1),
     }),
     async resolve({ ctx, input }) {
       await ctx.prisma.show.create({
         data: {
           channel: input.channel,
           startTime: input.startTime,
-          endTime: input.endTime,
         },
       });
     },

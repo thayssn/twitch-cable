@@ -33,8 +33,8 @@ const ScheduleForm = () => {
   const onSubmit = (ev: FormEvent<HTMLFormElement>) => {
     ev.preventDefault();
     const formData = new FormData(ev.target as HTMLFormElement);
-    const dataObject = Object.fromEntries(formData.entries());
-    mutate(dataObject as Show);
+    const dataObject = Object.fromEntries(formData.entries()) as Show;
+    mutate(dataObject);
   };
   return (
     <>
